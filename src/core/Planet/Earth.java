@@ -239,7 +239,7 @@ public class Earth extends Node{
         
         //for each mapnode add height information and adjust the vertex
         for(MapNode mapNode : map)
-            mapNode.setNeighbourParameters();
+            mapNode.setParameters();
             
         
         //for each mapnode calculate distance to and height difference

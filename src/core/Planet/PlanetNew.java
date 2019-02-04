@@ -38,7 +38,7 @@ public class PlanetNew extends Node{
         
         
         for(MapNode mapNode : map)
-            mapNode.setNeighbourParameters();
+            mapNode.setParameters();
         
         for(PlanetChunk chunk : chunks){
             chunk.buildMesh();

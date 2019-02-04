@@ -20,9 +20,7 @@ import java.util.ArrayList;
  */
 public class MapNode {
     
-    private final static double PI =  Math.PI;
-    private final static double HALFPI = Math.PI/2f;
-    private final static double THREEHPI = 3f* Math.PI/2f;
+    
     
     private final static ShapeSettings SHAPE_SETTINGS = new ShapeSettings();
     private final static BiomeSettings BIOME_SETTINGS = new BiomeSettings();
@@ -57,18 +55,25 @@ public class MapNode {
         this.vertex = vertex;
         
         height = SHAPE_GENERATOR.calculatePointOnPlanet(this.vertex);
-        biome = BIOME_GENERATOR.calculatePointOnPlanet(this.vertex, this.height);
-        colors = BIOME_GENERATOR.getColors(biome);
+        
         
         this.vertex.multLocal(1+height);
-        colors = BIOME_GENERATOR.getColors(biome);
+        
+        
     }
     
-    public void setNeighbourParameters(){
+    public void setParameters(){
+        setBiome();
         setDistanceToNeighbours();
         setHeightDifferenceToNeighbours();
         setNormal();
         
+    }
+    
+    public void setBiome(){
+        biome = BIOME_GENERATOR.calculatePointOnPlanet(this);
+        colors = BIOME_GENERATOR.getColors(biome);
+        colors = BIOME_GENERATOR.getColors(biome);
     }
     
     
@@ -163,14 +168,8 @@ public class MapNode {
             normal = this.vertex.mult(-1);
         }
         
-        if(this.mapNodeType == MapNodeType.LowerEdge || this.mapNodeType == MapNodeType.LowerCenter){
+        if(this.mapNodeType == MapNodeType.LowerEdge || this.mapNodeType == MapNodeType.LowerCenter)
             normal.multLocal(-1);
-        }
-            //normal.multLocal(-1);
-            
-        
-        
-        
     }
 
     void calculateNeighbours(int i, int resolution, int type, ArrayList<MapNode> array) {
@@ -179,31 +178,36 @@ public class MapNode {
         int longResolution = 4*resolution -4;
         
         if(type == 1 && (i==0 || i == resolution-1 || i == resolution*(resolution-1) || i == resolution*resolution - 1)){
-            this.mapNodeType = MapNodeType.Corner;
             
-            
-            neighbours = new MapNode[3];
 
-            ArrayList<MapNode> m = Earth.map;
+            
             if(i == 0){
+                this.mapNodeType = MapNodeType.Corner;
+                neighbours = new MapNode[3];
                 neighbours[0] = array.get(i+1);
                 neighbours[1] = array.get(i+resolution);
                 neighbours[2] = Earth.midSquares.get(longResolution);
                 
             }
             if(i == resolution-1){
+                this.mapNodeType = MapNodeType.Corner;
+                neighbours = new MapNode[3];
                 neighbours[0] = Earth.midSquares.get((3*resolution-3)+longResolution);
                 neighbours[1] = array.get(i+resolution);
                 neighbours[2] = array.get(i-1);
                 
             }
             if(i == resolution*(resolution-1)){
+                this.mapNodeType = MapNodeType.Corner;
+                neighbours = new MapNode[3];
                 neighbours[0] = array.get(i+1);
                 neighbours[1] = Earth.midSquares.get(resolution - 1 + longResolution);
                 neighbours[2] = array.get(i-resolution);
                 
             }
             if(i == resolution*resolution - 1){
+                this.mapNodeType = MapNodeType.Corner;
+                neighbours = new MapNode[3];
                 neighbours[0] =  Earth.midSquares.get(2*resolution-2+ longResolution);
                 neighbours[1] = array.get(i-1);
                 neighbours[2] = array.get(i-resolution);

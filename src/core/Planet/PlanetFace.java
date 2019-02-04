@@ -13,10 +13,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer;
 import com.jme3.util.BufferUtils;
-import com.jme3.util.TangentBinormalGenerator;
 import core.Statics.StaticAssets;
 import java.util.ArrayList;
 
@@ -85,24 +83,14 @@ public class PlanetFace extends Node{
             //Triangle definition
             if (position.x != resolutionX - 1 && position.y != resolutionY - 1)
             {
-                //if(isAntiClockwise){
-                    indices[triIndex] = i;
-                    indices[triIndex + 1] = i + resolutionX ;
-                    indices[triIndex + 2] = i + resolutionX + 1;
+                indices[triIndex] = i;
+                indices[triIndex + 1] = i + resolutionX ;
+                indices[triIndex + 2] = i + resolutionX + 1;
 
-                    indices[triIndex + 3] = i;
-                    indices[triIndex + 4] = i + resolutionX + 1;
-                    indices[triIndex + 5] = i  + 1;
+                indices[triIndex + 3] = i;
+                indices[triIndex + 4] = i + resolutionX + 1;
+                indices[triIndex + 5] = i  + 1;
                     
-              /*  }else{
-                    indices[triIndex] = i;
-                    indices[triIndex + 1] = i + resolutionX + 1;
-                    indices[triIndex + 2] = i + resolutionX;
-
-                    indices[triIndex + 3] = i;
-                    indices[triIndex + 4] = i + 1;
-                    indices[triIndex + 5] = i + resolutionX + 1;
-                }*/
                 triIndex += 6;
             }
             
@@ -131,6 +119,7 @@ public class PlanetFace extends Node{
         if(!isAntiClockwise) matLight.getAdditionalRenderState().setFaceCullMode(RenderState.FaceCullMode.Front);
         matLight.getAdditionalRenderState().setWireframe(isWireframe);
         matLight.setBoolean("UseVertexColor", true);
+        
         matLight.setBoolean("UseMaterialColors", true);
         matLight.setBoolean("VertexLighting", true);
         matLight.setColor("Ambient", ColorRGBA.White); //Using white here, but shouldn't matter that much
