@@ -6,6 +6,7 @@
 package core.Noise.BiomeMap;
 
 import com.jme3.math.Vector4f;
+import core.Planet.Earth;
 import core.Planet.MapNode;
 
 /**
@@ -24,10 +25,19 @@ public class BiomeGenerator {
         
         Biome biome = Biome.GRASSLAND;
         
+        
+        if(isCoast(mapNode))
+            biome = Biome.BEACH; 
+        if(isPolar(mapNode))
+            biome = Biome.GLACIER;
+        if(mapNode.height > 0.0051f )
+            biome = Biome.SNOW_PEAKS;
+        if(mapNode.height > 0.0021f && mapNode.height < 0.0051f)
+            biome = Biome.CLIFF;
+        
         if(mapNode.height == 0)
             biome = Biome.OCEAN;
-        if(mapNode.height > 0 && mapNode.height < 0.0001f)
-            biome = Biome.BEACH;   
+        
         
         return biome;
     }
@@ -41,9 +51,15 @@ public class BiomeGenerator {
         if(biome == Biome.BEACH)
             v = new Vector4f(1f, 240f/255f, 201f/255f, 0f);
         
-        if(biome == Biome.OCEAN)
+       
+        if(biome == Biome.SNOW_PEAKS)
+            v = new Vector4f(1f, 1f, 1f, 0f);
+        if(biome == Biome.CLIFF)
+            v = new Vector4f(96f/255f,96f/255f,100f/255f,0);
+        if(biome == Biome.GLACIER)
+            v = new Vector4f(1f, 1f, 1f, 0f);
+         if(biome == Biome.OCEAN)
             v = new Vector4f(0f, 0.467f, 0.745f, 0f);
-        
         
         float[] arr = new float[4];
         arr[0] = v.x;
@@ -53,6 +69,27 @@ public class BiomeGenerator {
         
         
         return arr;
+    }
+
+    private boolean isCoast(MapNode mapNode) {
+        boolean neighbourIsWater = false, neighbourIsLand = false;
+        
+        for(MapNode m : mapNode.neighbours){
+            if(m.height <= 0)
+                neighbourIsWater = true;
+            if(m.height > 0)
+                neighbourIsLand = true;
+        }
+        
+        if(neighbourIsWater && neighbourIsLand && mapNode.height>0){
+            return true;
+        }
+        
+        return false;
+    }
+
+    private boolean isPolar(MapNode mapNode) {
+        return Math.abs(mapNode.vertex.y) > 0.95f * Earth.SCALE;
     }
     
 }

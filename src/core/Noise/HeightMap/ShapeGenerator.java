@@ -96,7 +96,7 @@ public class ShapeGenerator {
         shapeSettings.noiseLayers[2].enabled = true;
         noiseFilters[2].settings.baseRoughness = 0.003f;
         noiseFilters[2].settings.roughness = 2.5f;
-        noiseFilters[2].settings.strength = 4.5f;
+        noiseFilters[2].settings.strength = 7.5f;
         noiseFilters[2].settings.numLayers = 6;
         noiseFilters[2].settings.persistance = 0.575f;
         noiseFilters[2].settings.minValue = 0.4f;//biomeSettings.Sea_Level;

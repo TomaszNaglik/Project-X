@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Earth extends Node{
     
     public final int resolution = 400;
-    public final int scale = 1000;
+    public static final int SCALE = 1000;
     public final boolean isSphere = true;
     
     public final int longResolution = 4*resolution -4;
@@ -213,7 +213,7 @@ public class Earth extends Node{
     private MapNode createPoint(Vector3f positionXYZ, Vector2f positionXY, ArrayList<MapNode> array){
         if (isSphere)
             positionXYZ.normalizeLocal();
-        positionXYZ.multLocal(scale);
+        positionXYZ.multLocal(SCALE);
 
         MapNode mapNode = new MapNode(positionXYZ, positionXY);
         array.add(mapNode);

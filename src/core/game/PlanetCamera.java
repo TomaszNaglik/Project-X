@@ -48,9 +48,9 @@ public class PlanetCamera {
         this.newCamDir = new Vector3f(camera.getDirection());
         
        
-        minZoom = (planet.scale + camera.getFrustumNear())*1.05f;
-        maxZoom = (planet.scale + camera.getFrustumNear())*5;
-        zoom = planet.scale * 1.3f;
+        minZoom = (planet.SCALE + camera.getFrustumNear())*1.05f;
+        maxZoom = (planet.SCALE + camera.getFrustumNear())*5;
+        zoom = planet.SCALE * 1.3f;
     }
     
     public void update(float tpf){
@@ -108,8 +108,8 @@ public class PlanetCamera {
         theta += (velTheta *tpf );
         rho += (velRho*tpf) ;
         zoom +=(zoomVel );
-        directionOffset = (baseDirectionOffset * ((zoom-planet.scale)/ (maxZoom - planet.scale)))*6f;
-        angularAcceleration = baseAngularAcceleration *((zoom-planet.scale)/ (maxZoom - planet.scale)) *2;
+        directionOffset = (baseDirectionOffset * ((zoom-planet.SCALE)/ (maxZoom - planet.SCALE)))*6f;
+        angularAcceleration = baseAngularAcceleration *((zoom-planet.SCALE)/ (maxZoom - planet.SCALE)) *2;
         
         validatePosition(tpf);
         
@@ -117,7 +117,7 @@ public class PlanetCamera {
         newCamPos.x = zoom * (float)Math.sin(rho  ) * (float)Math.sin(theta);
         newCamPos.y = zoom * (float)Math.cos(rho  );
         camera.setLocation(newCamPos);
-        camera.setFrustumFar(3*(zoom-planet.scale));
+        camera.setFrustumFar(3*(zoom-planet.SCALE));
         
         dampenVelocity();
     }
@@ -130,9 +130,9 @@ public class PlanetCamera {
 
     private void calculateNewCameraDirection() {
         
-        newCamDir.z = planet.scale * (float)Math.sin(rhoDir - directionOffset ) * (float)Math.cos(theta);
-        newCamDir.x = planet.scale * (float)Math.sin(rhoDir - directionOffset ) * (float)Math.sin(theta);
-        newCamDir.y = planet.scale * (float)Math.cos(rhoDir - directionOffset );
+        newCamDir.z = planet.SCALE * (float)Math.sin(rhoDir - directionOffset ) * (float)Math.cos(theta);
+        newCamDir.x = planet.SCALE * (float)Math.sin(rhoDir - directionOffset ) * (float)Math.sin(theta);
+        newCamDir.y = planet.SCALE * (float)Math.cos(rhoDir - directionOffset );
                 
         camera.lookAt(newCamDir, newCamPos);
     }
