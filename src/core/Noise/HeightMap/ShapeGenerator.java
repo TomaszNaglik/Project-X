@@ -74,9 +74,9 @@ public class ShapeGenerator {
         noiseFilters[0].settings.roughness = 2.4f;
         noiseFilters[0].settings.strength = 0.00151f;
         noiseFilters[0].settings.numLayers = 8;
-        noiseFilters[0].settings.persistance = 0.575f;
+        noiseFilters[0].settings.persistance = 0.475f;
         noiseFilters[0].settings.minValue = 0.3f;//biomeSettings.Sea_Level;
-        noiseFilters[0].settings.center = new Vector3f(3,-2,120);
+        noiseFilters[0].settings.center = new Vector3f(300,-300,320);
         masksIndex[0] = -1;
         
         
@@ -98,9 +98,9 @@ public class ShapeGenerator {
         noiseFilters[2].settings.roughness = 2.5f;
         noiseFilters[2].settings.strength = 7.5f;
         noiseFilters[2].settings.numLayers = 6;
-        noiseFilters[2].settings.persistance = 0.575f;
+        noiseFilters[2].settings.persistance = 0.675f;
         noiseFilters[2].settings.minValue = 0.4f;//biomeSettings.Sea_Level;
-        noiseFilters[2].settings.center = new Vector3f(0,5,0);
+        noiseFilters[2].settings.center = new Vector3f(100,50,0);
         masksIndex[2] = 0;
         
         

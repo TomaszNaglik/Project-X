@@ -3,12 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core.Planet;
+package core.Planet.PlanetFeatures;
 
 /**
  *
  * @author Tomasz.Naglik
  */
-public enum Sides {TOP, BOTTOM, LEFT, RIGHT, INFRONT, BEHIND}
-    
+class NameGenerator {
 
+    static String nextRiverName;
+
+    static String nextRiverName() {
+        return "Leszkia";
+    }
+    
+}

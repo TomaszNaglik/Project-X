@@ -8,6 +8,7 @@ package core.Planet;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import core.Planet.PlanetFeatures.PlanetFeaturesGenerator;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -29,12 +30,15 @@ public class Earth extends Node{
     public static ArrayList<MapNode> midSquares = new ArrayList<>();
     public static ArrayList<MapNode> bottomSquare = new ArrayList<>();
     
+    public static ArrayList<MapNode> coast = new ArrayList<>();
+     public static ArrayList<MapNode> hills = new ArrayList<>();
+    
     public static ArrayList<MapNode> square1 = new ArrayList<>();
     public static ArrayList<MapNode> square2 = new ArrayList<>();
     public static ArrayList<MapNode> square3 = new ArrayList<>();
     public static ArrayList<MapNode> square4 = new ArrayList<>();
     
-    
+    public PlanetFeaturesGenerator planetFeaturesGenerator = new PlanetFeaturesGenerator();
     
     public Earth() {
         
@@ -53,52 +57,9 @@ public class Earth extends Node{
         System.out.println("average time per node: "+ave);
         assignSidesToMapNodes();
         
-        /*for(MapNode m : map){
-            System.out.println("Vertex " +m.currentIndex + " :  " +m.vertex.toString());
-            
-            System.out.println("N1: " + m.neighbours[0].currentIndex + "      " + m.neighbours[0].vertex.toString());
-            System.out.println("N1: " + m.neighbours[1].currentIndex + "      " + m.neighbours[1].vertex.toString());
-            System.out.println("N1: " + m.neighbours[2].currentIndex + "      " + m.neighbours[2].vertex.toString());
-            if(m.neighbours.length == 4)
-                System.out.println("N1: " + m.neighbours[3].currentIndex + "      " + m.neighbours[3].vertex.toString());
-            
-            System.out.println("");
-        }
-        /*System.out.println("");
-            System.out.println("");
-            System.out.println(""); System.out.println("TopSquare");
-        for(MapNode m : topSquare){
-            
-           
-            System.out.println("Vertex " +m.currentIndex + " :  " +m.vertex.toString());
-        }System.out.println("");
-        System.out.println("Square1");
-        for(MapNode m : square1){
-            
-            
-            System.out.println("Vertex " +m.currentIndex + " :  " +m.vertex.toString());
-        }System.out.println("");System.out.println("Square2");
-         for(MapNode m : square2){
-            
-             
-            System.out.println("Vertex " +m.currentIndex + " :  " +m.vertex.toString());
-        }System.out.println("");System.out.println("Square3");
-          for(MapNode m : square3){
-            
-            
-            System.out.println("Vertex " +m.currentIndex + " :  " +m.vertex.toString());
-        }System.out.println("");System.out.println("Square4");
-           for(MapNode m : square4){
-            
-               
-            System.out.println("Vertex " +m.currentIndex + " :  " +m.vertex.toString());
-        }System.out.println("");System.out.println("BottomSquare");
-            for(MapNode m : bottomSquare){
-            
-                
-            System.out.println("Vertex " +m.currentIndex + " :  " +m.vertex.toString());
-        }*/
+        buildFeatures();
         buildPlanet();
+        
     }
 
     public void update(){
@@ -300,6 +261,11 @@ public class Earth extends Node{
                 
             }
         }
+    }
+
+    private void buildFeatures() {
+        this.planetFeaturesGenerator.generateRivers();
+        this.attachChild(this.planetFeaturesGenerator);
     }
     
 }

@@ -22,11 +22,12 @@ public class MapNode {
     
     
     
-    private final static ShapeSettings SHAPE_SETTINGS = new ShapeSettings();
-    private final static BiomeSettings BIOME_SETTINGS = new BiomeSettings();
+    private static final  ShapeSettings SHAPE_SETTINGS = new ShapeSettings();
+    private static final  BiomeSettings BIOME_SETTINGS = new BiomeSettings();
     private static final ShapeGenerator SHAPE_GENERATOR = new ShapeGenerator(SHAPE_SETTINGS);
-    private static final BiomeGenerator BIOME_GENERATOR = new BiomeGenerator(BIOME_SETTINGS);
+    public static final BiomeGenerator BIOME_GENERATOR = new BiomeGenerator(BIOME_SETTINGS);
     
+    private static final float HEIGHT_DIFFERENCE_SCALE_FACTOR = 10000f;
     
     private static int mapNodeIndex = 0;
     public final int currentIndex;
@@ -41,6 +42,8 @@ public class MapNode {
     public MapNode[] neighbours; 
     public float[] distanceToNeighbour;
     public float[] heightDifferenceToNeighbour;
+    
+    public boolean isRiver = false;
     
     
     
@@ -73,7 +76,7 @@ public class MapNode {
     public void setBiome(){
         biome = BIOME_GENERATOR.calculatePointOnPlanet(this);
         colors = BIOME_GENERATOR.getColors(biome);
-        colors = BIOME_GENERATOR.getColors(biome);
+        
     }
     
     
@@ -101,7 +104,7 @@ public class MapNode {
        
        this.distanceToNeighbour = new float[neighbours.length];
         for(int i=0 ; i<distanceToNeighbour.length ; i++){
-            distanceToNeighbour[i] = vertex.distance(neighbours[i].vertex);
+            distanceToNeighbour[i] = vertex.distance(neighbours[i].vertex) *HEIGHT_DIFFERENCE_SCALE_FACTOR;
         }
     }
     public float getDistanceToNeighbour(int i){
@@ -114,7 +117,7 @@ public class MapNode {
     private void setHeightDifferenceToNeighbours(){
         this.heightDifferenceToNeighbour = new float[neighbours.length];
         for(int i=0 ; i<heightDifferenceToNeighbour.length ; i++){
-            heightDifferenceToNeighbour[i] = neighbours[i].height - height;
+            heightDifferenceToNeighbour[i] = (neighbours[i].height - height) *HEIGHT_DIFFERENCE_SCALE_FACTOR;
         }
     }
     public float getHeightDifferenceToNeighbour(int i){

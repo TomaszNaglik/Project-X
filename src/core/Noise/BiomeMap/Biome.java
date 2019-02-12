@@ -9,4 +9,4 @@ package core.Noise.BiomeMap;
  *
  * @author Tomasz.Naglik
  */
-public enum Biome {OCEAN,SEA,BEACH,CLIFF, DESERT, PLAINS, GRASSLAND, GLACIER, SNOW_PEAKS}
+public enum Biome {OCEAN,SEA,BEACH,CLIFF, DESERT, PLAINS, GRASSLAND, GLACIER, SNOW_PEAKS, RIVER}

@@ -11,7 +11,7 @@ import com.jme3.font.BitmapFont;
 import com.jme3.input.FlyByCamera;
 import com.jme3.input.InputManager;
 import com.jme3.renderer.Camera;
-import core.Planet.Planet;
+
 
 
 /**
@@ -26,6 +26,7 @@ public class StaticAssets {
     public static InputManager inputManager;
     public static FlyByCamera flyCamera;
     public static Camera camera;
+    
     
     public static int screenHeight, screenWidth;
     

@@ -9,7 +9,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import core.Planet.Earth;
-import core.Planet.Planet;
+
 import core.Statics.StaticAssets;
 
 
@@ -20,7 +20,7 @@ import core.Statics.StaticAssets;
 public class Game {
     
     
-    Planet planet;
+    
     Earth earth;
     DirectionalLight sun;
     Input input;
@@ -29,12 +29,12 @@ public class Game {
     
     public Game(SimpleApplication app){
         
-        //planet = new Planet();
+       
         earth = new Earth();
         planetCamera = new PlanetCamera(earth);
         input = new Input(planetCamera);
         sun = new DirectionalLight();
-        sun.setDirection(StaticAssets.camera.getDirection());
+        sun.setDirection(StaticAssets.camera.getLocation());
         sun.setColor(ColorRGBA.White);
         app.getRootNode().attachChild(earth);
         app.getRootNode().addLight(sun);
@@ -49,7 +49,7 @@ public class Game {
         planetCamera.update(tpf);
         //earth.update();
         
-        sun.setDirection(StaticAssets.camera.getDirection().mult(-1));
+        sun.setDirection(StaticAssets.camera.getLocation().mult(1));
         
         
     }
