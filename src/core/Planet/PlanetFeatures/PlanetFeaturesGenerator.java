@@ -32,7 +32,7 @@ public class PlanetFeaturesGenerator extends Node{
             while(!riverFound){
                 int index = (int)( (float)Math.random() * (nodes.size()-1));
                 River river = River.generateRiver(nodes.get(index));
-                if(river != null)
+                if(river.points.size()>0)
                 {
                     riverFound=true;
                     rivers.add(river);

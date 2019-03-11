@@ -7,7 +7,7 @@ package core.Planet;
 
 import com.jme3.math.Vector2f;
 import core.Noise.BiomeMap.BiomeGenerator;
-import core.Noise.BiomeMap.Biome;
+import core.Noise.BiomeMap.BiomeSet;
 import com.jme3.math.Vector3f;
 import core.Noise.BiomeMap.BiomeSettings;
 import core.Noise.HeightMap.ShapeGenerator;
@@ -25,7 +25,7 @@ public class MapNode {
     private static final  ShapeSettings SHAPE_SETTINGS = new ShapeSettings();
     private static final  BiomeSettings BIOME_SETTINGS = new BiomeSettings();
     private static final ShapeGenerator SHAPE_GENERATOR = new ShapeGenerator(SHAPE_SETTINGS);
-    public static final BiomeGenerator BIOME_GENERATOR = new BiomeGenerator(BIOME_SETTINGS);
+    //public static final BiomeGenerator BIOME_GENERATOR = new BiomeGenerator(BIOME_SETTINGS);
     
     private static final float HEIGHT_DIFFERENCE_SCALE_FACTOR = 10000f;
     
@@ -36,14 +36,17 @@ public class MapNode {
     public Vector3f normal;
     public Vector2f positionWithinChunk;
     public float height;
-    public Biome biome;
-    public float[] colors;
+    public float[] biomeSet;
+    //public float[] colors;
     public MapNodeType mapNodeType;
     public MapNode[] neighbours; 
     public float[] distanceToNeighbour;
     public float[] heightDifferenceToNeighbour;
     
+    
     public boolean isRiver = false;
+    public boolean isGlacier = false;
+    public boolean isOcean = false;
     
     
     
@@ -67,6 +70,7 @@ public class MapNode {
     
     public void setParameters(){
         setBiome();
+        
         setDistanceToNeighbours();
         setHeightDifferenceToNeighbours();
         setNormal();
@@ -74,8 +78,12 @@ public class MapNode {
     }
     
     public void setBiome(){
-        biome = BIOME_GENERATOR.calculatePointOnPlanet(this);
-        colors = BIOME_GENERATOR.getColors(biome);
+        biomeSet = BiomeGenerator.generateBiomeSet(this);
+        if(biomeSet[7] == 1)
+            isGlacier = true;
+        if(biomeSet[0] == 1)
+            isOcean=true;
+        //colors = BIOME_GENERATOR.getColors(biomeSet);
         
     }
     

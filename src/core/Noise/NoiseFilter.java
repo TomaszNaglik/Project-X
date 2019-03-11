@@ -28,7 +28,7 @@ public class NoiseFilter {
         for(int i=0;i<settings.numLayers;i++){
             Vector3f newPoint = new Vector3f(point.add(settings.center).mult(frequency));
             float v = SimplexNoise.generateNoise(newPoint);
-            //noiseValue += (v+1)*0.5f*amplitude;
+            noiseValue += (v+1)*0.5f*amplitude;
             noiseValue += v*amplitude;
             frequency *= settings.roughness;
             amplitude *= settings.persistance;

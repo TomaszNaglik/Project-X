@@ -21,15 +21,17 @@ public class Main extends SimpleApplication {
     
     private static void setSettings(Main app) {
         
-        int w = 1200;
-        //int h = (int)(w*(9f/16f));
+        int w = 1600;
+        int h = (int)(w*(9f/16f));
         app.showSettings = false;
         AppSettings settings = new AppSettings(true);
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        StaticAssets.screenWidth= gd.getDisplayMode().getWidth();
-        StaticAssets.screenHeight= gd.getDisplayMode().getHeight();
+        //StaticAssets.screenWidth= gd.getDisplayMode().getWidth();
+        //StaticAssets.screenHeight= gd.getDisplayMode().getHeight();
+        StaticAssets.screenWidth= w;
+        StaticAssets.screenHeight= h;
         settings.setResolution(StaticAssets.screenWidth, StaticAssets.screenHeight);
-        //settings.setResolution(w,h);
+        //settings.setRenderer(AppSettings.LWJGL_OPENAL);
         settings.setFullscreen(false);
         
         

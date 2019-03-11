@@ -13,11 +13,10 @@ import core.Noise.NoiseSettings;
  */
 public class BiomeSettings {
     
-    public float Sea_Level;
     public BiomeSettings.NoiseLayer[] noiseLayers;
     
     public BiomeSettings(){
-        Sea_Level = .0f;
+        
         noiseLayers = new NoiseLayer[4];
         for( int i=0; i< noiseLayers.length; i++)
             noiseLayers[i] = new NoiseLayer();
@@ -25,7 +24,7 @@ public class BiomeSettings {
     
     public class NoiseLayer{
         public boolean enabled = true;
-        //public boolean useFirstLayerAsMask = false;
+        
         public NoiseSettings settings;
         
         public NoiseLayer(){

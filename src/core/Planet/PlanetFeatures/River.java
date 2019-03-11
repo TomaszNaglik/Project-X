@@ -8,7 +8,7 @@ package core.Planet.PlanetFeatures;
 import com.jme3.scene.Node;
 import core.Planet.MapNode;
 import java.util.ArrayList;
-import core.Noise.BiomeMap.Biome;
+import core.Noise.BiomeMap.BiomeSet;
 
 /**
  *
@@ -26,8 +26,8 @@ public class River extends Node{
     
     public final void build(){
        for(int i = 0 ; i< points.size(); i++){
-            points.get(i).biome = Biome.RIVER;
-            points.get(i).colors = MapNode.BIOME_GENERATOR.getColors(Biome.RIVER);
+            points.get(i).isRiver = true;
+            //points.get(i).colors = MapNode.BIOME_GENERATOR.getColors(BiomeSet.RIVER);
         }
     }
     
@@ -35,44 +35,39 @@ public class River extends Node{
         
         boolean isConfluence = false;
         boolean reachedOcean = false;
-        if(point.height <= 0)
-            return null;
-        
-        ArrayList<MapNode> mapNodes = new ArrayList<>();
         boolean stopRiverGrowth = false;
         
-        mapNodes.add(point);
-        
-        
-        MapNode nextMapNode = getNextNode(point, mapNodes);
-        if(nextMapNode == null || nextMapNode.biome == Biome.GLACIER)
-                stopRiverGrowth = true;
-        while ( !stopRiverGrowth){
-            mapNodes.add(nextMapNode);
+        ArrayList<MapNode> mapNodes = new ArrayList<>();
+       
+        if(point.height > 0){
             
-            
-            if( nextMapNode.isRiver){
-                stopRiverGrowth = true;
-                isConfluence = true;
+            mapNodes.add(point);
+            MapNode nextMapNode = getNextNode(point, mapNodes);
+            while ( !stopRiverGrowth){
+                 if(nextMapNode == null || nextMapNode.isGlacier)
+                    break;
+
+                mapNodes.add(nextMapNode);
+
+                if( nextMapNode.isRiver){
+                    stopRiverGrowth = true;
+                    isConfluence = true;
+                }
+                if( nextMapNode.isOcean ){
+                    stopRiverGrowth = true;
+                    reachedOcean = true;
+                }
+
+                nextMapNode = getNextNode(nextMapNode, mapNodes);
             }
-            if( nextMapNode.biome == Biome.OCEAN ){
-                stopRiverGrowth = true;
-                reachedOcean = true;
+
+            if(reachedOcean || isConfluence){
+                for(MapNode m : mapNodes)
+                    m.isRiver = true;
+            }else{
+                mapNodes.clear();
             }
-            nextMapNode.isRiver = true;
-            nextMapNode = getNextNode(nextMapNode, mapNodes);
-            
-            if(nextMapNode == null || nextMapNode.biome == Biome.GLACIER)
-                stopRiverGrowth = true;
-        }
-        
-        if(!reachedOcean && !isConfluence ){
-            for(MapNode m : mapNodes)
-                m.isRiver = false;
-            return null;
-        }
-            
-        
+        }    
         return new River(mapNodes);
     }
     

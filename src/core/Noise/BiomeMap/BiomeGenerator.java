@@ -6,9 +6,7 @@
 package core.Noise.BiomeMap;
 
 import com.jme3.math.Vector3f;
-import com.jme3.math.Vector4f;
-import core.Noise.NoiseFilter;
-import core.Noise.SimplexNoise;
+import core.Noise.BiomeMap.BiomeGenerators.*;
 import core.Planet.Earth;
 import core.Planet.MapNode;
 
@@ -17,29 +15,136 @@ import core.Planet.MapNode;
  * @author Tomasz.Naglik
  */
 public class BiomeGenerator {
+    public static final BiomeSettings BIOME_SETTINGS = new BiomeSettings();
     
-    NoiseFilter[] noiseFilters;
-    int masksIndex[];
-    BiomeSettings biomeSettings;
-    
-    public BiomeGenerator( BiomeSettings settings){
-        this.biomeSettings = settings;
+    public static OceanGenerator Ocean = new OceanGenerator(BIOME_SETTINGS);
+    public static SeaGenerator Sea = new SeaGenerator(BIOME_SETTINGS);
+    public static BeachGenerator Beach = new BeachGenerator(BIOME_SETTINGS);
+    public static CliffGenerator Cliff = new CliffGenerator(BIOME_SETTINGS);
+    public static DesertGenerator Desert = new DesertGenerator(BIOME_SETTINGS);
+    public static PlainsGenerator Plains = new PlainsGenerator(BIOME_SETTINGS);
+    public static GrasslandGenerator Grassland = new GrasslandGenerator(BIOME_SETTINGS);
+    public static GlacierGenerator Glacier = new GlacierGenerator(BIOME_SETTINGS);
+    public static Snow_PeaksGenerator Snow_Peaks = new Snow_PeaksGenerator(BIOME_SETTINGS);
+    public static RiverGenerator River = new RiverGenerator(BIOME_SETTINGS);
+
+    public static float[] generateBiomeSet(MapNode node) {
         
-            
-        noiseFilters = new NoiseFilter[biomeSettings.noiseLayers.length];
-        masksIndex = new int[biomeSettings.noiseLayers.length];
+        float[] set = new float [18];
+        Vector3f point = new Vector3f(node.vertex);
         
-        for(int i = 0; i<noiseFilters.length;i++){
-            noiseFilters[i] = new NoiseFilter(biomeSettings.noiseLayers[i].settings);
+        set[0] = Ocean.calculatePointOnPlanet(point);
+        set[1] = 0;//Sea.calculatePointOnPlanet(point);
+        set[2] = Beach.calculatePointOnPlanet(point);
+        set[3] = Cliff.calculatePointOnPlanet(point);
+        set[4] = Desert.calculatePointOnPlanet(point);
+        set[5] = Plains.calculatePointOnPlanet(point);
+        set[6] = Grassland.calculatePointOnPlanet(point);
+        set[7] = Glacier.calculatePointOnPlanet(point);
+        set[8] = Snow_Peaks.calculatePointOnPlanet(point);
+        set[9] = River.calculatePointOnPlanet(point);
+        
+        setIndex(6,set);
+        
+        if(isCoast(node)){
+            setIndex(2, set);
         }
-        initializeNoiseFilters();
+        if(node.height<=0){
+            setIndex(0, set);
+        }
+        if(isHill(node)){
+            setIndex(3, set);
+        }
+        if(isPeak(node)){
+            setIndex(8, set);
+        }
+        
+        
+        return normalized(set);
+        
+        
     }
+    
+    public static float[] generateBiomeSet(Vector3f node) {
+        
+        float[] set = new float [18];
+        Vector3f point = new Vector3f(node);
+        
+        set[0] = Ocean.calculatePointOnPlanet(point);
+        set[1] = Sea.calculatePointOnPlanet(point);
+        set[2] = Beach.calculatePointOnPlanet(point);
+        set[3] = Cliff.calculatePointOnPlanet(point);
+        set[4] = Desert.calculatePointOnPlanet(point);
+        set[5] = Plains.calculatePointOnPlanet(point);
+        set[6] = Grassland.calculatePointOnPlanet(point);
+        set[7] = Glacier.calculatePointOnPlanet(point);
+        set[8] = Snow_Peaks.calculatePointOnPlanet(point);
+        
+        
+        
+        
+        return normalized(set);
+        
+        
+    }
+    
+    private static void setIndex(int index, float[] set){
+        for(int i = 0 ; i < set.length ; i++)
+            set[i] = 0;
+        set[index] = 1;
+    }
+    
+    private static float[] normalized(float [] input){
+        float [] result = new float [input.length];
+        float sum = 0;
+        for(int i = 0 ; i < input.length ; i++)
+            sum += input[i];
+        
+        for(int i = 0 ; i < input.length ; i++)
+            result[i] = input[i]/sum;
+        return result;
+    }
+    
+    private static boolean isCoast(MapNode mapNode) {
+        boolean neighbourIsWater = false, neighbourIsLand = false;
+        
+        for(MapNode m : mapNode.neighbours){
+            if(m.height <= 0)
+                neighbourIsWater = true;
+            if(m.height > 0)
+                neighbourIsLand = true;
+        }
+        
+        if(neighbourIsWater && neighbourIsLand && mapNode.height>0){
+            Earth.coast.add(mapNode);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    private static boolean isHill(MapNode mapNode) {
+        
+        
+        boolean result = mapNode.height > 0.0021f && mapNode.height < 0.0051f;
+        if (result) {
+            Earth.hills.add(mapNode);
+            return true;
+        }
+        return false;
+    }
+    
+    private static boolean isPeak(MapNode mapNode) {
+                
+        return mapNode.height >= 0.0051f;
+    }
+   /*
 
     public Biome calculatePointOnPlanet(MapNode mapNode) {
         
         Biome biome = Biome.GRASSLAND;
-        if(isDesert(mapNode))
-            biome = Biome.DESERT;
+        //if(isDesert(mapNode))
+           // biome = Biome.DESERT;
         
         if(isCoast(mapNode))
             biome = Biome.BEACH; 
@@ -143,85 +248,8 @@ public class BiomeGenerator {
                 && (calculateNoiseAtPoint(mapNode.vertex,1)* factor)+0.49f  > 0.4f;
     }
     
-    public float calculateNoiseAtPoint (Vector3f pointOnUnitSphere, int index){
-        //float[] elevation = new float[noiseFilters.length];
-        //float[] masks = new float[biomeSettings.noiseLayers.length];
-        float elevationSum = 0;
-        
-        //calculate base values
-        //for(int i=0; i<noiseFilters.length;i++)
-             //elevation[i] = noiseFilters[i].evaluate(pointOnUnitSphere);
-        /*
-        //set masks
-        for(int i=0; i<masks.length;i++)
-            if(masksIndex[i] == -1)
-                masks[i] = 1;
-            else
-                masks[i] = elevation[masksIndex[i]];
-        
-        //apply mask
-        for(int i=0; i<noiseFilters.length;i++)
-                elevation[i] *= masks[i];
-        
-        //calculate final elevation
-        for(int i=0; i<noiseFilters.length;i++)
-            if(biomeSettings.noiseLayers[i].enabled)
-                elevationSum += elevation[i];
-        
-            */
-        
-        //return elevationSum;
-        
-        return noiseFilters[index].evaluate(pointOnUnitSphere);
-    }
-     private void initializeNoiseFilters() {
-        //continents
-        biomeSettings.noiseLayers[0].enabled = true;
-        noiseFilters[0].settings.baseRoughness = 0.000450f;
-        noiseFilters[0].settings.roughness = 2.4f;
-        noiseFilters[0].settings.strength = 0.0251f;
-        noiseFilters[0].settings.numLayers = 4;
-        noiseFilters[0].settings.persistance = 0.775f;
-        noiseFilters[0].settings.minValue = 0.3f;//biomeSettings.Sea_Level;
-        noiseFilters[0].settings.center = new Vector3f(300,-300,320);
-        masksIndex[0] = -1;
-        
-        
-        //desert
-        biomeSettings.noiseLayers[1].enabled = false;
-        noiseFilters[1].settings.baseRoughness = 0.001525f;
-        noiseFilters[1].settings.roughness = 0.855f;
-        noiseFilters[1].settings.strength = 0.5f;
-        noiseFilters[1].settings.numLayers = 8;
-        noiseFilters[1].settings.persistance = 0.85f;
-        noiseFilters[1].settings.minValue = 0.0f;
-        noiseFilters[1].settings.center = new Vector3f(0,100,0);
-        masksIndex[1] = 0;
-        
-        
-        //mountains
-        biomeSettings.noiseLayers[2].enabled = true;
-        noiseFilters[2].settings.baseRoughness = 0.003f;
-        noiseFilters[2].settings.roughness = 2.5f;
-        noiseFilters[2].settings.strength = 7.5f;
-        noiseFilters[2].settings.numLayers = 6;
-        noiseFilters[2].settings.persistance = 0.675f;
-        noiseFilters[2].settings.minValue = 0.4f;//biomeSettings.Sea_Level;
-        noiseFilters[2].settings.center = new Vector3f(100,50,0);
-        masksIndex[2] = 0;
-        
-        
-        //extra
-        biomeSettings.noiseLayers[3].enabled = false;
-        noiseFilters[3].settings.baseRoughness = 2;
-        noiseFilters[3].settings.roughness = 3;
-        noiseFilters[3].settings.strength = 1;
-        noiseFilters[3].settings.numLayers = 4;
-        noiseFilters[3].settings.persistance = 0.5f;
-        noiseFilters[3].settings.minValue = 0.0f;
-        noiseFilters[3].settings.center = new Vector3f(0,0,0);
-        masksIndex[3] = -1;
-    }
+    */
+     
 
     
     

@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class Earth extends Node{
     
-    public final int resolution = 400;
+    public final int resolution = 100;
     public static final int SCALE = 1000;
     public final boolean isSphere = true;
     
@@ -43,11 +43,11 @@ public class Earth extends Node{
     public Earth() {
         
         Timestamp timestamp1 = new Timestamp(System.currentTimeMillis());
-        System.out.println(timestamp1);
+        System.out.println("Beginning of Earth creation: " +timestamp1);
         generateMapNodes();
-        
+        System.out.println("MapNodes Generated");
         parametrizeMapNodes();
-        
+        System.out.println("MapNodes parametrized");
         
         Timestamp timestamp2 = new Timestamp(System.currentTimeMillis());
         System.out.println(timestamp1);
@@ -57,7 +57,7 @@ public class Earth extends Node{
         System.out.println("average time per node: "+ave);
         assignSidesToMapNodes();
         
-        buildFeatures();
+        //buildFeatures();
         buildPlanet();
         
     }
@@ -196,7 +196,7 @@ public class Earth extends Node{
             
             midSquares.get(i).calculateNeighbours(i,resolution, 0, midSquares);
         }
-        
+        System.out.println("Neighbours added");
         
         //for each mapnode add height information and adjust the vertex
         for(MapNode mapNode : map)
