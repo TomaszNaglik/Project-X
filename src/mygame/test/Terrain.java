@@ -72,35 +72,7 @@ public class Terrain extends Node{
                 vertices[x+(y*resolution)] = new Vector3f(x-resolution/2,h,y-resolution/2);
                 textCoords[x+(y*resolution)] = new Vector2f(tresolution*(float)x/resolution,tresolution*(float)y/resolution);
                 normals[x+(y*resolution)] = new Vector3f(0,1,0);
-                
-                biomesSet = BiomeGenerator.generateBiomeSet(vertices[x+(y*resolution)]);
-                
-                biome4[x+(y*resolution)].x = biomesSet[0];
-                biome4[x+(y*resolution)].y = biomesSet[1];
-                biome4[x+(y*resolution)].z = biomesSet[2];
-                biome4[x+(y*resolution)].w = biomesSet[3];
-                
-                biome2t[x+(y*resolution)].x = biomesSet[4];
-                biome2t[x+(y*resolution)].y = biomesSet[5];
-                
-                biome3t[x+(y*resolution)].x = biomesSet[6];
-                biome3t[x+(y*resolution)].y = biomesSet[7];
-                
-                biome4t[x+(y*resolution)].x = biomesSet[8];
-                biome4t[x+(y*resolution)].y = biomesSet[9];
-                
-                biome5t[x+(y*resolution)].x = biomesSet[10];
-                biome5t[x+(y*resolution)].y = biomesSet[11];
-                
-                biome6t[x+(y*resolution)].x = biomesSet[12];
-                biome6t[x+(y*resolution)].y = biomesSet[13];
-                
-                biome7t[x+(y*resolution)].x = biomesSet[14];
-                biome7t[x+(y*resolution)].y = biomesSet[15];
-                
-                biome8t[x+(y*resolution)].x = biomesSet[16];
-                biome8t[x+(y*resolution)].y = biomesSet[17];
-                
+                                
             }
         }
         
@@ -126,39 +98,16 @@ public class Terrain extends Node{
         
         mesh.updateBound();
         
-        
-        
         geo = new Geometry(this.name+" Geometry", mesh); // using our custom mesh object
-        
-         
-        
-        Material matLight = new Material(assetManager, "MatDefs/textureMatDef.j3md"); //"Common/MatDefs/Light/Lighting.j3md"); //"Common/MatDefs/Misc/Unshaded.j3md"
-        Texture water = assetManager.loadTexture("Textures/water.jpg");
-        Texture t1 = assetManager.loadTexture("Textures/t1.png");
-        Texture t2 = assetManager.loadTexture("Textures/t2.png");
+        Material matLight = new Material(assetManager, "MatDefs/experimental1.j3md"); //"Common/MatDefs/Light/Lighting.j3md"); //"Common/MatDefs/Misc/Unshaded.j3md"
+        Texture water = assetManager.loadTexture("Textures/River.jpg");
         water.setWrap(Texture.WrapMode.Repeat);
-        t1.setWrap(Texture.WrapMode.Repeat);
-        t2.setWrap(Texture.WrapMode.Repeat);
-        matLight.setTexture("DiffuseMap", water);
-        matLight.setTexture("T1", t1);
-        matLight.setTexture("T2", t2);
-        //mesh.setBuffer(VertexBuffer.Type.Color, 4, colorArray);
+        matLight.setTexture("m_tWater", water);
+        
         matLight.getAdditionalRenderState().setFaceCullMode(RenderState.FaceCullMode.Front);
         matLight.getAdditionalRenderState().setWireframe(false);
-        //matLight.setBoolean("UseVertexColor", true);
-        
-        //matLight.setBoolean("UseMaterialColors", true);
-        //matLight.setBoolean("VertexLighting", true);
-        matLight.setColor("Ambient", ColorRGBA.White); //Using white here, but shouldn't matter that much
-        matLight.setColor("Diffuse", ColorRGBA.White);
-        matLight.setColor("Specular", ColorRGBA.White); //Using yellow for example
-        matLight.setFloat("Shininess", 1);
-        
-
         geo.setMaterial(matLight);
         this.attachChild(geo);
-        
-        
         return mesh;
     }
     

@@ -3,12 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package core.Noise.BiomeMap;
+package mygame.test;
 
 /**
  *
  * @author Tomasz.Naglik
  */
-public enum BiomeSet {OCEAN,SEA,BEACH,CLIFF, DESERT, PLAINS, GRASSLAND, GLACIER, SNOW_PEAKS, RIVER}
-
-
+public class ParallelRunner implements Runnable{
+    
+    public ParallelRunner(){}
+    
+    public void run(){
+        
+    }
+    
+}

@@ -26,66 +26,52 @@ import java.util.ArrayList;
  * @author Tomasz.Naglik
  */
 public class PlanetFace extends Node{
-
+    
+    boolean isWireframe = true;
+    
     public final ArrayList<MapNode> mapNodes = new ArrayList<>();
     public final Vector3f[] vertices;
     private final Vector3f[] normals;
-    
-    private float [] colorArray = new float[mapNodes.size()];
-        private Vector4f [] biome4;
-        private Vector4f [] biome2t;
-        private Vector4f [] biome3t;
-        private Vector2f [] biome4t;
-        private Vector2f [] biome5t;
-        private Vector2f [] biome6t;
-        private Vector2f [] biome7t;
-        private Vector2f [] biome8t;
-        
-        private Vector2f [] texCoords;
-    
-        private float[] biomesSet;
-    private int resolutionX;
-    private int resolutionY;
-    
     private final int[] indices;
-    //private float [] colorArray;
-    
-    
-   
-    boolean isAntiClockwise;
-    boolean isWireframe = false;
-    private int xIndex;
-    private int split;
-    
+    private Vector2f [] texCoords;
+    private Vector4f [] biome1t;
+    private Vector4f [] biome2t;
+    private Vector4f [] biome3t;
+        
+    private final int resolutionX;
+    private final int resolutionY;
+    private boolean isAntiClockwise;
     private Mesh mesh;
+    
+    
+    public static Texture Ocean = StaticAssets.assetManager.loadTexture("Textures/Ocean.jpg");
+    public static Texture Sea = StaticAssets.assetManager.loadTexture("Textures/Sea.jpg");
+    public static Texture Beach = StaticAssets.assetManager.loadTexture("Textures/Beach.jpg");
+    public static Texture Grassland = StaticAssets.assetManager.loadTexture("Textures/Grassland.jpg");
+    public static Texture Plains = StaticAssets.assetManager.loadTexture("Textures/Plains.jpg");
+    public static Texture Cliffs = StaticAssets.assetManager.loadTexture("Textures/Cliffs.jpg");
+    public static Texture Glacier = StaticAssets.assetManager.loadTexture("Textures/Glacier.jpg");
+    public static Texture Snow_Peaks = StaticAssets.assetManager.loadTexture("Textures/Snow Peaks.jpg");
+    public static Texture Desert = StaticAssets.assetManager.loadTexture("Textures/Desert.jpg");
+    public static Texture River = StaticAssets.assetManager.loadTexture("Textures/River.jpg");
     
     public PlanetFace(ArrayList<MapNode> array, int xResolution, int yResolution, boolean isAntiClockwise) {
         
         this.isAntiClockwise = isAntiClockwise;
-        int step =1;
-        this.xIndex = 0;
-        this.split = 0;
-        
         this.resolutionX = xResolution;
         this.resolutionY = yResolution;
         
-        
-        
-        for(int i=0; i< array.size(); i+=step)
+        for(int i=0; i< array.size(); i++)
             mapNodes.add(array.get(i));
         
         vertices = new Vector3f[mapNodes.size()];
         normals = new Vector3f[mapNodes.size()];
         indices = new int[6*(resolutionX-1)*(resolutionY-1)];
         
-        biome4 = new Vector4f[mapNodes.size()];
+        biome1t = new Vector4f[mapNodes.size()];
         biome2t = new Vector4f[mapNodes.size()];
         biome3t = new Vector4f[mapNodes.size()];
-        biome4t = new Vector2f[mapNodes.size()];
-        biome5t = new Vector2f[mapNodes.size()];
-        biome6t = new Vector2f[mapNodes.size()];
-        biome7t = new Vector2f[mapNodes.size()];
-        biome8t = new Vector2f[mapNodes.size()];
+        
         
         texCoords = new Vector2f[mapNodes.size()];
         
@@ -98,7 +84,6 @@ public class PlanetFace extends Node{
 
     private void setupMesh() {
         int triIndex = 0;
-        int colIndex = 0;
         for (int i = 0 ; i < mapNodes.size() ; i++){
             vertices[i] = mapNodes.get(i).vertex;
             
@@ -109,14 +94,14 @@ public class PlanetFace extends Node{
             
             Vector2f position = new Vector2f((int)i % (resolutionX),(int)i / (resolutionY));
             
-            biomesSet = BiomeGenerator.generateBiomeSet(mapNodes.get(i));
+            float[] biomesSet = BiomeGenerator.generateBiomeSet(mapNodes.get(i));
            
               
-                biome4[i] = new Vector4f();
-                biome4[i].x = biomesSet[0];
-                biome4[i].y = biomesSet[1];
-                biome4[i].z = biomesSet[2];
-                biome4[i].w = biomesSet[3];
+                biome1t[i] = new Vector4f();
+                biome1t[i].x = biomesSet[0];
+                biome1t[i].y = biomesSet[1];
+                biome1t[i].z = biomesSet[2];
+                biome1t[i].w = biomesSet[3];
                 
                 biome2t[i] = new Vector4f();
                 biome2t[i].x = biomesSet[4];
@@ -129,26 +114,6 @@ public class PlanetFace extends Node{
                 biome3t[i].y = biomesSet[9];
                 biome3t[i].z = biomesSet[10];
                 biome3t[i].w = biomesSet[11];
-                
-                /*biome4t[i] = new Vector2f();
-                biome4t[i].x = biomesSet[8];
-                biome4t[i].y = biomesSet[9];
-                
-                biome5t[i] = new Vector2f();
-                biome5t[i].x = biomesSet[10];
-                biome5t[i].y = biomesSet[11];
-                
-                biome6t[i] = new Vector2f();
-                biome6t[i].x = biomesSet[12];
-                biome6t[i].y = biomesSet[13];
-                
-                biome7t[i] = new Vector2f();
-                biome7t[i].x = biomesSet[14];
-                biome7t[i].y = biomesSet[15];
-                
-                biome8t[i] = new Vector2f();
-                biome8t[i].x = biomesSet[16];
-                biome8t[i].y = biomesSet[17];*/
                 
                 int x = i % resolutionX;
                 int y = i / resolutionY;
@@ -170,12 +135,6 @@ public class PlanetFace extends Node{
                     
                 triIndex += 6;
             }
-            
-            //Color definition
-            //colorArray[colIndex++] = mapNodes.get(i).colors[0];
-            //colorArray[colIndex++] = mapNodes.get(i).colors[1];
-            //colorArray[colIndex++] = mapNodes.get(i).colors[2];
-            //colorArray[colIndex++] = mapNodes.get(i).colors[3];
         }
     }
 
@@ -184,33 +143,18 @@ public class PlanetFace extends Node{
         mesh.setBuffer(VertexBuffer.Type.Position, 3, BufferUtils.createFloatBuffer(vertices));
         mesh.setBuffer(VertexBuffer.Type.Index,    3, BufferUtils.createIntBuffer(indices));
         mesh.setBuffer(VertexBuffer.Type.Normal,   3, BufferUtils.createFloatBuffer(normals));
-        mesh.setBuffer(VertexBuffer.Type.Color, 4, BufferUtils.createFloatBuffer(biome4));
+        mesh.setBuffer(VertexBuffer.Type.Color, 4, BufferUtils.createFloatBuffer(biome1t));
         mesh.setBuffer(VertexBuffer.Type.TexCoord, 2, BufferUtils.createFloatBuffer(texCoords));
         mesh.setBuffer(VertexBuffer.Type.TexCoord2, 4, BufferUtils.createFloatBuffer(biome2t));
         mesh.setBuffer(VertexBuffer.Type.TexCoord3, 4, BufferUtils.createFloatBuffer(biome3t));
-        /*mesh.setBuffer(VertexBuffer.Type.TexCoord4, 2, BufferUtils.createFloatBuffer(biome4t));
-        mesh.setBuffer(VertexBuffer.Type.TexCoord5, 2, BufferUtils.createFloatBuffer(biome5t));
-        mesh.setBuffer(VertexBuffer.Type.TexCoord6, 2, BufferUtils.createFloatBuffer(biome6t));
-        mesh.setBuffer(VertexBuffer.Type.TexCoord7, 2, BufferUtils.createFloatBuffer(biome7t));
-        mesh.setBuffer(VertexBuffer.Type.TexCoord8, 2, BufferUtils.createFloatBuffer(biome8t));*/
+        
         mesh.updateBound();
         
         Geometry geo = new Geometry(this.name+" Geometry", mesh); // using our custom mesh object
-         Material matLight = new Material(StaticAssets.assetManager, "MatDefs/textureMatDef.j3md"); //"Common/MatDefs/Light/Lighting.j3md"); //"Common/MatDefs/Misc/Unshaded.j3md"
-        //Texture water = StaticAssets.assetManager.loadTexture("Textures/water.jpg");
-        //Texture t1 = StaticAssets.assetManager.loadTexture("Textures/t1.png");
-        //Texture t2 = StaticAssets.assetManager.loadTexture("Textures/t2.png");
+        Material matLight = new Material(StaticAssets.assetManager, "MatDefs/textureMatDef.j3md"); //"Common/MatDefs/Light/Lighting.j3md"); //"Common/MatDefs/Misc/Unshaded.j3md"
         
-        Texture Ocean = StaticAssets.assetManager.loadTexture("Textures/Ocean.jpg");
-        Texture Sea = StaticAssets.assetManager.loadTexture("Textures/Sea.jpg");
-        Texture Beach = StaticAssets.assetManager.loadTexture("Textures/Beach.jpg");
-        Texture Grassland = StaticAssets.assetManager.loadTexture("Textures/Grassland.jpg");
-        Texture Plains = StaticAssets.assetManager.loadTexture("Textures/Plains.jpg");
-        Texture Cliffs = StaticAssets.assetManager.loadTexture("Textures/Cliffs.jpg");
-        Texture Glacier = StaticAssets.assetManager.loadTexture("Textures/Glacier.jpg");
-        Texture Snow_Peaks = StaticAssets.assetManager.loadTexture("Textures/Snow Peaks.jpg");
-        Texture Desert = StaticAssets.assetManager.loadTexture("Textures/Desert.jpg");
-        Texture River = StaticAssets.assetManager.loadTexture("Textures/Ocean.jpg");
+        
+        
         
         
         //water.setWrap(Texture.WrapMode.Repeat);
@@ -255,6 +199,10 @@ public class PlanetFace extends Node{
 
         geo.setMaterial(matLight);
         this.attachChild(geo);
+    }
+
+    boolean isInVisibleRange() {
+        return true;
     }
     
 }

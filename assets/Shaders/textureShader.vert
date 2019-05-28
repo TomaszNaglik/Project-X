@@ -21,26 +21,16 @@ uniform vec4 g_AmbientLightColor;
 varying vec2 texCoord;
 varying vec4 modelSpacePos;
 varying float time;
-//#ifdef SEPARATE_TEXCOORD
+
 varying vec4 color;
 varying vec4 texCoord2;
 varying vec4 texCoord3;
-//varying vec2 texCoord4;
-//varying vec2 texCoord5;
-//varying vec2 texCoord6;
-//varying vec2 texCoord7;
-//varying vec2 texCoord8;
   
 
 attribute vec4 inColor;
 attribute vec4 inTexCoord2;
 attribute vec4 inTexCoord3;
-//attribute vec2 inTexCoord4;
-//attribute vec2 inTexCoord5;
-//attribute vec2 inTexCoord6;
-//attribute vec2 inTexCoord7;
-//attribute vec2 inTexCoord8;
-//#endif
+
 
 varying vec3 AmbientSum;
 varying vec4 DiffuseSum;
@@ -137,6 +127,9 @@ void main(){
     //texCoord7 = inTexCoord7;
     //texCoord8 = inTexCoord8;
    
+
+    //vec4 pos = vec4(modelSpacePos);
+    //pos.y = modelSpacePos.y*(1+(sin((modelSpacePos.x + time*10)/10)*2 + sin((modelSpacePos.z + time*10)/6)*4));
    gl_Position = TransformWorldViewProjection(modelSpacePos);// g_WorldViewProjectionMatrix * modelSpacePos;
    
    

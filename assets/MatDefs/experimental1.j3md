@@ -1,0 +1,15 @@
+MaterialDef Simple {
+    MaterialParameters {
+        Color Color
+        Texture2D m_tWater
+    }
+    Technique {
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+        LightMode MultiPass
+
+        VertexShader GLSL410 GLSL410:   Shaders/exp.vert
+        FragmentShader GLSL410 GLSL410: Shaders/exp.frag
+    }
+}

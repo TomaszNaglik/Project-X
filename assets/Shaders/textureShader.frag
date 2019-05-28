@@ -12,11 +12,7 @@ varying float time;
 varying vec4 color;
 varying vec4 texCoord2;
 varying vec4 texCoord3;
-//varying vec2 texCoord4;
-//varying vec2 texCoord5;
-//varying vec2 texCoord6;
-//varying vec2 texCoord7;
-//varying vec2 texCoord8;
+
 
 
 varying vec3 AmbientSum;
@@ -36,7 +32,6 @@ uniform sampler2D m_tRiver;
 
 #ifndef VERTEX_LIGHTING
   uniform vec4 g_LightDirection;
-  //varying vec3 vPosition;
   varying vec3 vViewDir;
   varying vec4 vLightDir;
   varying vec3 lightVec;

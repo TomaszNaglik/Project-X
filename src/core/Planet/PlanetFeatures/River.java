@@ -8,7 +8,6 @@ package core.Planet.PlanetFeatures;
 import com.jme3.scene.Node;
 import core.Planet.MapNode;
 import java.util.ArrayList;
-import core.Noise.BiomeMap.BiomeSet;
 
 /**
  *
@@ -26,8 +25,9 @@ public class River extends Node{
     
     public final void build(){
        for(int i = 0 ; i< points.size(); i++){
-            points.get(i).isRiver = true;
-            //points.get(i).colors = MapNode.BIOME_GENERATOR.getColors(BiomeSet.RIVER);
+           MapNode point = points.get(i);
+           point.isRiver = true;
+           point.updateBiome();
         }
     }
     
