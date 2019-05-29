@@ -22,9 +22,9 @@ public class Earth extends Node{
     
     private static final Logger LOGGER = Logger.getLogger(Earth.class.getName());
     
-    public final int resolution = 21;
-    public final int smallRes = 5;
-    public final int split = 5;
+    public final int resolution = 223;
+    
+    public final int split = 6;
     public static final int SCALE = 1000;
     public final boolean isSphere = false;
     float step = 1f/(float)(resolution-1);
@@ -197,17 +197,19 @@ public class Earth extends Node{
         
         
         //split the mesh into submeshes
-        ArrayList<MapNode> subArrays [] = splitArray(resolution, smallRes, split, array);
+        ArrayList<MapNode> subArrays [] = splitArray(resolution, split, array);
         //introduce higher frequency
         for (ArrayList<MapNode> subArray : subArrays) {
             //increaseFaceResolution(subArray);
         }
         //build faces
         boolean draw = true;
+        
+        int smallRes = (int)(float)Math.sqrt(subArrays[0].size());
         for (ArrayList<MapNode> subArray : subArrays) {
             PlanetFace face = new PlanetFace(subArray, smallRes, smallRes, isAntiClockwise);
             
-            if(draw){
+            if(true){
                 draw = !draw;
                 faces.add(face);
             }else{
@@ -312,14 +314,14 @@ public class Earth extends Node{
         return c;
     }
 
-    private ArrayList<MapNode>[] splitArray(int bigResolution, int smallResolution, int split, ArrayList<MapNode> mapNodes) {
+    private ArrayList<MapNode>[] splitArray(int bigResolution, int split, ArrayList<MapNode> mapNodes) {
         
         //find first element of subArrays
         
         int firstIndices[] = new int[split*split];
         int arrayIndex = 0;
         int i = 0;
-        
+        int smallResolution = (bigResolution+split-1)/split;
         while (i<bigResolution*(bigResolution-1)){
             for(int j=0; j<split; j++){
                 
