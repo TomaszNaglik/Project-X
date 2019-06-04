@@ -46,7 +46,7 @@ public class ShapeGenerator {
              elevation[i] = noiseFilters[i].evaluate(pointOnUnitSphere);
         
         //set masks
-        for(int i=0; i<masks.length;i++)
+        /*for(int i=0; i<masks.length;i++)
             if(masksIndex[i] == -1)
                 masks[i] = 1;
             else
@@ -55,7 +55,7 @@ public class ShapeGenerator {
         //apply mask
         for(int i=0; i<noiseFilters.length;i++)
                 elevation[i] *= masks[i];
-        
+        */
         //calculate final elevation
         for(int i=0; i<noiseFilters.length;i++)
             if(shapeSettings.noiseLayers[i].enabled)
@@ -71,11 +71,11 @@ public class ShapeGenerator {
         //continents
         shapeSettings.noiseLayers[0].enabled = true;
         noiseFilters[0].settings.baseRoughness = 0.000850f;
-        noiseFilters[0].settings.roughness = 2.4f;
+        noiseFilters[0].settings.roughness = 3.4f;
         noiseFilters[0].settings.strength = 0.00151f;
         noiseFilters[0].settings.numLayers = 8;
         noiseFilters[0].settings.persistance = 0.475f;
-        noiseFilters[0].settings.minValue = 1.35f;//biomeSettings.Sea_Level;
+        noiseFilters[0].settings.minValue = 1.350f;//biomeSettings.Sea_Level;
         noiseFilters[0].settings.center = new Vector3f(300,-500,320);
         masksIndex[0] = -1;
         
@@ -94,9 +94,9 @@ public class ShapeGenerator {
         
         //mountains
         shapeSettings.noiseLayers[2].enabled = true;
-        noiseFilters[2].settings.baseRoughness = 0.0055f;
+        noiseFilters[2].settings.baseRoughness = 0.000055f;
         noiseFilters[2].settings.roughness = 3.5f;
-        noiseFilters[2].settings.strength = 4.5f;
+        noiseFilters[2].settings.strength = .05f;
         noiseFilters[2].settings.numLayers = 6;
         noiseFilters[2].settings.persistance = 0.575f;
         noiseFilters[2].settings.minValue = 1.3f;//biomeSettings.Sea_Level;

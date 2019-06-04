@@ -6,8 +6,8 @@
 package core.Planet.PlanetFeatures;
 
 import com.jme3.scene.Node;
-import core.Planet.Earth;
 import core.Planet.MapNode;
+import core.Statics.StaticAssets;
 import java.util.ArrayList;
 
 /**
@@ -25,7 +25,7 @@ public class PlanetFeaturesGenerator extends Node{
 
     public void generateRivers(){
         
-        ArrayList<MapNode> nodes = (ArrayList<MapNode>) Earth.map.clone();
+        ArrayList<MapNode> nodes = (ArrayList<MapNode>) StaticAssets.earth.map.clone();
         boolean riverFound = false;
         for(int i=0; i<RiverAmount ; i++){
             

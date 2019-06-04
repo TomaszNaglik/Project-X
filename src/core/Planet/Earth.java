@@ -9,6 +9,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import core.Planet.PlanetFeatures.PlanetFeaturesGenerator;
+import core.Statics.StaticAssets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -21,35 +22,47 @@ import java.util.logging.Logger;
 public class Earth extends Node{
     
     private static final Logger LOGGER = Logger.getLogger(Earth.class.getName());
-    
-    public final int resolution = 223;
-    
+    //Resolution and split variables should have the following property: (resolution+split-1)/split should give a full integer value
+    public final int resolution;
     public final int split = 6;
+    
     public static final int SCALE = 1000;
-    public final boolean isSphere = false;
-    float step = 1f/(float)(resolution-1);
+    public final boolean isSphere = true;
+    float step;
+    private boolean isLand;
     
-    public final int longResolution = 4*resolution -4;
+    public final int longResolution;
     
-    public static ArrayList<PlanetFace> faces = new ArrayList<>();
-    public static ArrayList<MapNode> map = new ArrayList<>();
-    public static ArrayList<MapNode> topSquare = new ArrayList<>();
-    public static ArrayList<MapNode> midSquares = new ArrayList<>();
-    public static ArrayList<MapNode> bottomSquare = new ArrayList<>();
+    public ArrayList<PlanetFace> faces = new ArrayList<>();
+    public ArrayList<MapNode> map = new ArrayList<>();
+    public ArrayList<MapNode> topSquare = new ArrayList<>();
+    public ArrayList<MapNode> midSquares = new ArrayList<>();
+    public ArrayList<MapNode> bottomSquare = new ArrayList<>();
     
-    public static ArrayList<MapNode> coast = new ArrayList<>();
-     public static ArrayList<MapNode> hills = new ArrayList<>();
+    public ArrayList<MapNode> coast = new ArrayList<>();
+    public ArrayList<MapNode> hills = new ArrayList<>();
     
-    public static ArrayList<MapNode> square1 = new ArrayList<>();
-    public static ArrayList<MapNode> square2 = new ArrayList<>();
-    public static ArrayList<MapNode> square3 = new ArrayList<>();
-    public static ArrayList<MapNode> square4 = new ArrayList<>();
+    public ArrayList<MapNode> square1 = new ArrayList<>();
+    public ArrayList<MapNode> square2 = new ArrayList<>();
+    public ArrayList<MapNode> square3 = new ArrayList<>();
+    public ArrayList<MapNode> square4 = new ArrayList<>();
+    
+    public ArrayList<MapNode> subArrays [];
     
     public PlanetFeaturesGenerator planetFeaturesGenerator = new PlanetFeaturesGenerator();
     
     Timestamp t1, t2, t3, t4, t5, t6;
     
-    public Earth() {
+    public Earth(boolean isLand, int resolution) {
+        
+        this.isLand = isLand;
+        this.resolution = resolution;
+        this.step = 1f/(float)(resolution-1);
+        this.longResolution = 4*resolution -4;
+        if(isLand)
+            StaticAssets.earth = this;
+        else
+            StaticAssets.sea = this;
         
         LOGGER.log(Level.INFO, "Beginning of Earth creation: {0}", t1 = new Timestamp(System.currentTimeMillis()));
         
@@ -68,6 +81,8 @@ public class Earth extends Node{
         buildPlanet();
         LOGGER.log(Level.INFO,"Planet built: {0} , + {1}", new Object[]{t6 = new Timestamp(System.currentTimeMillis()), t6.getTime() - t5.getTime()});
         LOGGER.log(Level.INFO,"Total time spent: {0}", t6.getTime() - t1.getTime());
+        
+        
         
     }
 
@@ -166,7 +181,7 @@ public class Earth extends Node{
             positionXYZ.normalizeLocal();
         positionXYZ.multLocal(SCALE);
 
-        MapNode mapNode = new MapNode(positionXYZ, positionXY);
+        MapNode mapNode = new MapNode(positionXYZ, positionXY, isLand);
         array.add(mapNode);
         map.add(mapNode);
         
@@ -197,7 +212,7 @@ public class Earth extends Node{
         
         
         //split the mesh into submeshes
-        ArrayList<MapNode> subArrays [] = splitArray(resolution, split, array);
+        subArrays = splitArray(resolution, split, array);
         //introduce higher frequency
         for (ArrayList<MapNode> subArray : subArrays) {
             //increaseFaceResolution(subArray);
@@ -208,13 +223,8 @@ public class Earth extends Node{
         int smallRes = (int)(float)Math.sqrt(subArrays[0].size());
         for (ArrayList<MapNode> subArray : subArrays) {
             PlanetFace face = new PlanetFace(subArray, smallRes, smallRes, isAntiClockwise);
+            faces.add(face);
             
-            if(true){
-                draw = !draw;
-                faces.add(face);
-            }else{
-                draw = !draw;
-            }
             
         }
         
@@ -287,9 +297,9 @@ public class Earth extends Node{
             if((i+1) % newResolution != 0){
                 
                 MapNode origin = subArray.get(i);
-                MapNode right = new MapNode(interpolateVf3(origin, subArray.get(i+1)), interpolateVf2(origin, subArray.get(i+1)));
-                MapNode down = new MapNode(interpolateVf3(origin, subArray.get(i+res)), interpolateVf2(origin, subArray.get(i+res)));
-                MapNode diag = new MapNode(interpolateVf3(origin, subArray.get(i+res+1)), interpolateVf2(origin, subArray.get(i+res+1)));
+                MapNode right = new MapNode(interpolateVf3(origin, subArray.get(i+1)), interpolateVf2(origin, subArray.get(i+1)), isLand);
+                MapNode down = new MapNode(interpolateVf3(origin, subArray.get(i+res)), interpolateVf2(origin, subArray.get(i+res)), isLand);
+                MapNode diag = new MapNode(interpolateVf3(origin, subArray.get(i+res+1)), interpolateVf2(origin, subArray.get(i+res+1)), isLand);
                 
                 
                 

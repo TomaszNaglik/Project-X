@@ -7,8 +7,8 @@ package core.Noise.BiomeMap;
 
 import com.jme3.math.Vector3f;
 import core.Noise.BiomeMap.BiomeGenerators.*;
-import core.Planet.Earth;
 import core.Planet.MapNode;
+import core.Statics.StaticAssets;
 
 /**
  *
@@ -49,14 +49,15 @@ public class BiomeGenerator {
         if(isCoast(node)){
             setIndex(2, set);
         }
-        if(node.height<=0){
-            setIndex(0, set);
-        }
+        
         if(isHill(node)){
             setIndex(3, set);
         }
         if(isPeak(node)){
             setIndex(8, set);
+        }
+        if(!node.isLand){
+            setIndex(0, set);
         }
         
         
@@ -115,8 +116,8 @@ public class BiomeGenerator {
                 neighbourIsLand = true;
         }
         
-        if(neighbourIsWater && neighbourIsLand && mapNode.height>0){
-            Earth.coast.add(mapNode);
+        if(neighbourIsWater && neighbourIsLand ){//&& mapNode.height>0){
+            StaticAssets.earth.coast.add(mapNode);
             return true;
         }
         
@@ -128,7 +129,7 @@ public class BiomeGenerator {
         
         boolean result = mapNode.height > 0.0021f && mapNode.height < 0.0051f;
         if (result) {
-            Earth.hills.add(mapNode);
+            StaticAssets.earth.hills.add(mapNode);
             return true;
         }
         return false;

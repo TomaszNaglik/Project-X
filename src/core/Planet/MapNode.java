@@ -10,6 +10,8 @@ import core.Noise.BiomeMap.BiomeGenerator;
 import com.jme3.math.Vector3f;
 import core.Noise.HeightMap.ShapeGenerator;
 import core.Noise.HeightMap.ShapeSettings;
+import core.Statics.StaticAssets;
+import static core.Statics.StaticAssets.earth;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,20 +45,32 @@ public class MapNode {
     public boolean isRiver = false;
     public boolean isGlacier = false;
     public boolean isOcean = false;
+    public boolean isLand = false;
+    private Earth sphere;
     
     
     
     
-    
-    
-    public MapNode(Vector3f vertex, Vector2f positionWithinChunk){
+    public MapNode(Vector3f vertex, Vector2f positionWithinChunk, boolean isLand){
+        this.isLand = isLand;
+        if(isLand)
+            this.sphere = StaticAssets.earth;
+        else
+            this.sphere = StaticAssets.sea;
+        
+                
         
         this.currentIndex = mapNodeIndex;
         mapNodeIndex++;
         this.positionWithinChunk = positionWithinChunk;
         this.vertex = vertex;
         
-        height = SHAPE_GENERATOR.calculatePointOnPlanet(this.vertex);
+        if(isLand)
+             height = SHAPE_GENERATOR.calculatePointOnPlanet(this.vertex);
+        else
+             height = 0;
+        
+       
         this.vertex.multLocal(1+height);
         
         
@@ -183,12 +197,12 @@ public class MapNode {
                 neighbours = new MapNode[3];
                 neighbours[0] = array.get(i+1);
                 neighbours[1] = array.get(i+resolution);
-                neighbours[2] = Earth.midSquares.get(longResolution);
+                neighbours[2] = sphere.midSquares.get(longResolution);
             }
             if(i == resolution-1){
                 this.mapNodeType = MapNodeType.Corner;
                 neighbours = new MapNode[3];
-                neighbours[0] = Earth.midSquares.get((3*resolution-3)+longResolution);
+                neighbours[0] = sphere.midSquares.get((3*resolution-3)+longResolution);
                 neighbours[1] = array.get(i+resolution);
                 neighbours[2] = array.get(i-1);
             }
@@ -196,13 +210,13 @@ public class MapNode {
                 this.mapNodeType = MapNodeType.Corner;
                 neighbours = new MapNode[3];
                 neighbours[0] = array.get(i+1);
-                neighbours[1] = Earth.midSquares.get(resolution - 1 + longResolution);
+                neighbours[1] = sphere.midSquares.get(resolution - 1 + longResolution);
                 neighbours[2] = array.get(i-resolution);
             }
             if(i == resolution*resolution - 1){
                 this.mapNodeType = MapNodeType.Corner;
                 neighbours = new MapNode[3];
-                neighbours[0] =  Earth.midSquares.get(2*resolution-2+ longResolution);
+                neighbours[0] =  sphere.midSquares.get(2*resolution-2+ longResolution);
                 neighbours[1] = array.get(i-1);
                 neighbours[2] = array.get(i-resolution);
             }
@@ -214,20 +228,20 @@ public class MapNode {
             if(i == 0){
                 neighbours[0] = array.get(i+1);
                 neighbours[1] = array.get(i+resolution);
-                neighbours[2] = Earth.midSquares.get(longResolution*(resolution-2));
+                neighbours[2] = sphere.midSquares.get(longResolution*(resolution-2));
             }
             if(i == resolution-1){
-                neighbours[0] = Earth.midSquares.get((3*resolution-3)+(longResolution*(resolution-2)));
+                neighbours[0] = sphere.midSquares.get((3*resolution-3)+(longResolution*(resolution-2)));
                 neighbours[1] = array.get(i+resolution);
                 neighbours[2] = array.get(i-1);
             }
             if(i == resolution*(resolution-1)){
                 neighbours[0] = array.get(i+1);
-                neighbours[1] = Earth.midSquares.get(resolution - 1 + (longResolution*(resolution-2)));
+                neighbours[1] = sphere.midSquares.get(resolution - 1 + (longResolution*(resolution-2)));
                 neighbours[2] = array.get(i-resolution);
             }
             if(i == resolution*resolution - 1){
-                neighbours[0] =  Earth.midSquares.get(2*resolution-2 + (longResolution*(resolution-2)));
+                neighbours[0] =  sphere.midSquares.get(2*resolution-2 + (longResolution*(resolution-2)));
                 neighbours[1] = array.get(i-1);
                 neighbours[2] = array.get(i-resolution);
             }
@@ -242,22 +256,22 @@ public class MapNode {
                 neighbours[0] = array.get(i+1);
                 neighbours[1] = array.get(i+resolution);
                 neighbours[2] = array.get(i-1);
-                neighbours[3] = Earth.midSquares.get(longResolution-i+longResolution);
+                neighbours[3] = sphere.midSquares.get(longResolution-i+longResolution);
             }
             if(i > resolution*(resolution-1)){
                 neighbours[0] = array.get(i+1);
-                neighbours[1] = Earth.midSquares.get((i%resolution)+resolution-1+longResolution);
+                neighbours[1] = sphere.midSquares.get((i%resolution)+resolution-1+longResolution);
                 neighbours[2] = array.get(i-1);
                 neighbours[3] = array.get(i-resolution);                
             }
             if(i%resolution ==0){
                 neighbours[0] = array.get(i+1);
                 neighbours[1] = array.get(i+resolution);
-                neighbours[2] = Earth.midSquares.get(i/resolution+longResolution);
+                neighbours[2] = sphere.midSquares.get(i/resolution+longResolution);
                 neighbours[3] = array.get(i-resolution);               
             }
             if(i%resolution == resolution -1){
-                neighbours[0] = Earth.midSquares.get((3*resolution-3)-(i/resolution)+longResolution);
+                neighbours[0] = sphere.midSquares.get((3*resolution-3)-(i/resolution)+longResolution);
                 neighbours[1] = array.get(i+resolution);
                 neighbours[2] = array.get(i-1);
                 neighbours[3] = array.get(i-resolution);                
@@ -272,23 +286,23 @@ public class MapNode {
                 neighbours[0] = array.get(i+1);
                 neighbours[1] = array.get(i+resolution);
                 neighbours[2] = array.get(i-1);
-                neighbours[3] = Earth.midSquares.get(longResolution-i+(longResolution*(resolution-2)));
+                neighbours[3] = sphere.midSquares.get(longResolution-i+(longResolution*(resolution-2)));
             }
             if(i > resolution*(resolution-1)){
                 
                 neighbours[0] = array.get(i+1);
-                neighbours[1] = Earth.midSquares.get((i%resolution)+resolution-1+((resolution-2)*longResolution));
+                neighbours[1] = sphere.midSquares.get((i%resolution)+resolution-1+((resolution-2)*longResolution));
                 neighbours[2] = array.get(i-1);
                 neighbours[3] = array.get(i-resolution);                
             }
             if(i%resolution ==0){
                 neighbours[0] = array.get(i+1);
                 neighbours[1] = array.get(i+resolution);
-                neighbours[2] = Earth.midSquares.get(i/resolution+(longResolution*(resolution-2)));
+                neighbours[2] = sphere.midSquares.get(i/resolution+(longResolution*(resolution-2)));
                 neighbours[3] = array.get(i-resolution);               
             }
             if(i%resolution == resolution -1){
-                neighbours[0] = Earth.midSquares.get((3*resolution-3)-(i/resolution)+(longResolution*(resolution-2)));
+                neighbours[0] = sphere.midSquares.get((3*resolution-3)-(i/resolution)+(longResolution*(resolution-2)));
                 neighbours[1] = array.get(i+resolution);
                 neighbours[2] = array.get(i-1);
                 neighbours[3] = array.get(i-resolution);                
@@ -302,7 +316,7 @@ public class MapNode {
                 neighbours = new MapNode[4];
                 neighbours[0] = array.get(i+1);
                 neighbours[1] = array.get(i+longResolution);
-                neighbours[2] = Earth.midSquares.get(i+longResolution-1);
+                neighbours[2] = sphere.midSquares.get(i+longResolution-1);
                 neighbours[3] = array.get(i-longResolution);
             }
             if(i%longResolution == longResolution-1){

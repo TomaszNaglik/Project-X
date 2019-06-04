@@ -27,7 +27,8 @@ import java.util.ArrayList;
  */
 public class PlanetFace extends Node{
     
-    boolean isWireframe = true;
+    boolean isWireframe = false;
+    
     
     public final ArrayList<MapNode> mapNodes = new ArrayList<>();
     public final Vector3f[] vertices;
@@ -42,7 +43,7 @@ public class PlanetFace extends Node{
     private final int resolutionY;
     private boolean isAntiClockwise;
     private Mesh mesh;
-    
+    public Vector3f center;
     
     public static Texture Ocean = StaticAssets.assetManager.loadTexture("Textures/Ocean.jpg");
     public static Texture Sea = StaticAssets.assetManager.loadTexture("Textures/Sea.jpg");
@@ -78,7 +79,7 @@ public class PlanetFace extends Node{
         setupMesh();
         buildMesh();
         
-        
+        center = vertices[vertices.length/2];
         
     }
 
@@ -202,7 +203,7 @@ public class PlanetFace extends Node{
     }
 
     boolean isInVisibleRange() {
-        return true;
+        return StaticAssets.camera.getLocation().distance(center) < StaticAssets.viewThreshold;
     }
     
 }

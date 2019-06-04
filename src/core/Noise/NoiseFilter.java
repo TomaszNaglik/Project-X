@@ -33,8 +33,8 @@ public class NoiseFilter {
             frequency *= settings.roughness;
             amplitude *= settings.persistance;
         }
-        noiseValue = Math.max(0, noiseValue - settings.minValue);
-        
+        //noiseValue = Math.max(0.1f, noiseValue - settings.minValue);
+        noiseValue = noiseValue - settings.minValue;
         return noiseValue * settings.strength;
     }
 }
